@@ -63,6 +63,10 @@ def force_length_tendon(lt):
     :return: normalized tension produced by tendon
     """
     # WRITE CODE HERE
+    if lt < 1:
+        return 0
+    if lt >= 1:
+        return(10*(lt - 1)+240(lt - 1)^2)
 
 
 def force_length_parallel(lm):
@@ -71,7 +75,10 @@ def force_length_parallel(lm):
     :return: normalized force produced by parallel elastic element
     """
     # WRITE CODE HERE
-
+    if lm < 1:
+        return 0
+    if lm >= 1:
+        return((3*(lm - 1)^2)/(0.6+lm-1))
 
 def plot_curves():
     """
@@ -221,4 +228,4 @@ def force_velocity_muscle(vm):
     """
     return np.maximum(0, force_velocity_regression.eval(vm))
 
-
+plot_curves()
