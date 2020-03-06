@@ -53,6 +53,14 @@ def get_velocity(a, lm, lt):
     :return: normalized lengthening velocity of muscle (contractile element)
     """
     beta = 0.1 # damping coefficient (see damped model in Millard et al.)
+    vm = np.arange(-1.2, 1.2, 2.4/100) 
+    p1 = a*force_length_muscle(lm)*force_velocity_muscle(vm)
+    # print(p1)
+    p2 = force_length_parallel(lm) + beta
+    # print(p2)
+    p3 = force_length_tendon(lt)
+    # print (p3)
+    return fsolve(((p1 + p2) - p3), 0)
 
     # WRITE CODE HERE TO CALCULATE VELOCITY
 
@@ -63,12 +71,13 @@ def force_length_tendon(lt):
     :return: normalized tension produced by tendon
     """
     # WRITE CODE HERE
+    lenTend = 0*lt
     for i in range(len(lt)):
         if lt[i] < 1:
-            lt[i] = 0
+            lenTend[i] = 0
         if lt[i] >= 1:
-            lt[i] = (10*(lt[i] - 1)+240*(lt[i] - 1)**2)
-    return lt
+            lenTend[i] = (10*(lt[i] - 1)+240*(lt[i] - 1)**2)
+    return lenTend
 
 
 def force_length_parallel(lm):
@@ -77,12 +86,13 @@ def force_length_parallel(lm):
     :return: normalized force produced by parallel elastic element
     """
     # WRITE CODE HERE
+    lenPar = lm*0
     for i in range(len(lm)):
         if lm[i] < 1:
-            lm[i] = 0
+            lenPar[i] = 0
         if lm[i] >= 1:
-            lm[i] = ((3*(lm[i] - 1)**2)/(-0.4+lm[i]))
-    return lm
+            lenPar[i] = ((3*(lm[i] - 1)**2)/(-0.4+lm[i]))
+    return lenPar
 
 def plot_curves():
     """
@@ -211,8 +221,6 @@ def get_muscle_force_length_regression():
     so optimal length = 1 and peak = 1. 3) Return a Regression object that
     uses Gaussian basis functions. 
     """
-    
-
     TAPassive = np.array([
         [43.820375335120644, 21.929057537636623],
         [43.37801608579089, 23.469787585069085],
@@ -495,10 +503,10 @@ def get_muscle_force_length_regression():
     lengthP = TAPassive[:,0]
     forceP = TAPassive[:,1]
     
-    centres = np.arange(-1, 0, .2)
+    centres = np.arange(min(lengthA), max(lengthA), 0.1)
     width = .15
     result = Regression(lengthA, forceA, centres, width, .1, sigmoids=False)
-    result = Regression(lengthP, forceP, centres, width, .1, sigmoids=False)
+    # result = Regression(lengthP, forceP, centres, width, .1, sigmoids=False)
 
     return result
 
@@ -525,5 +533,10 @@ def force_velocity_muscle(vm):
     :return: force-velocity scale factor
     """
     return np.maximum(0, force_velocity_regression.eval(vm))
+lm = np.arange(0, 1.8, 1.8/100)
+# vm = np.arange(-1.2, 1.2, 1/240)
+lt = np.arange(0, 1.07, 1.07/100)
 
+a = np.arange(0, 1, 1/100)
 plot_curves()
+get_velocity(a,lm,lt)
