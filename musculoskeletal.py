@@ -66,7 +66,7 @@ def force_length_tendon(lt):
     if lt < 1:
         return 0
     if lt >= 1:
-        return(10*(lt - 1)+240(lt - 1)^2)
+        return(10*(lt - 1)+240*(lt - 1)^2)
 
 
 def force_length_parallel(lm):
@@ -207,6 +207,8 @@ def get_muscle_force_length_regression():
     so optimal length = 1 and peak = 1. 3) Return a Regression object that
     uses Gaussian basis functions. 
     """
+    return 
+
 TAPassive = np.array([
     [43.820375335120644, 21.929057537636623],
     [43.37801608579089, 23.469787585069085],
@@ -481,7 +483,13 @@ TAActive = np.array([
     [38.39142091152815, -0.3507939781398193],
     [37.38605898123325, -0.34563827593316887]
 ])
-TAActive
+
+TAActive = TAActive/[72.41286863270777, 119.62858321303361]
+
+TAPassive = TAPassive/[54.67828418230563, 99.71952979995875]
+plt.plot(TAActive)
+plt.show
+
 force_length_regression = get_muscle_force_length_regression()
 force_velocity_regression = get_muscle_force_velocity_regression()
 
