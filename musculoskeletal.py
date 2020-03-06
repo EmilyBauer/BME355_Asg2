@@ -53,16 +53,6 @@ def get_velocity(a, lm, lt):
     :return: normalized lengthening velocity of muscle (contractile element)
     """
     beta = 0.1 # damping coefficient (see damped model in Millard et al.)
-<<<<<<< HEAD
-    vm = np.arange(-1.2, 1.2, 2.4/100) 
-    p1 = a*force_length_muscle(lm)*force_velocity_muscle(vm)
-    # print(p1)
-    p2 = force_length_parallel(lm) + beta
-    # print(p2)
-    p3 = force_length_tendon(lt)
-    # print (p3)
-    return fsolve(((p1 + p2) - p3), 0)
-=======
     def f(vm):
         p1 = a*force_length_muscle(lm)*force_velocity_muscle(vm)
         # print(p1)
@@ -72,7 +62,6 @@ def get_velocity(a, lm, lt):
         # print (p3)
         return ((p1 + p2) - p3)
     return fsolve(f, 0)
->>>>>>> ef170815a2a81031c5005a7867ebaa535ebeaa23
 
     # WRITE CODE HERE TO CALCULATE VELOCITY
 
@@ -83,8 +72,6 @@ def force_length_tendon(lt):
     :return: normalized tension produced by tendon
     """
     # WRITE CODE HERE
-<<<<<<< HEAD
-=======
     if isinstance(lt, float):
         if lt < 1:
             return 0
@@ -92,7 +79,6 @@ def force_length_tendon(lt):
             return ((3*(lt - 1)**2)/(-0.4+lt))
     
 
->>>>>>> ef170815a2a81031c5005a7867ebaa535ebeaa23
     lenTend = 0*lt
     for i in range(len(lt)):
         if lt[i] < 1:
@@ -108,24 +94,17 @@ def force_length_parallel(lm):
     :return: normalized force produced by parallel elastic element
     """
     # WRITE CODE HERE
-<<<<<<< HEAD
-=======
     if isinstance(lm, int):
         if lm < 1:
             return 0
         elif lm >= 1:
             return ((3*(lm - 1)**2)/(-0.4+lm))
     
->>>>>>> ef170815a2a81031c5005a7867ebaa535ebeaa23
     lenPar = lm*0
     for i in range(len(lm)):
         if lm[i] < 1:
             lenPar[i] = 0
-<<<<<<< HEAD
-        if lm[i] >= 1:
-=======
         elif lm[i] >= 1:
->>>>>>> ef170815a2a81031c5005a7867ebaa535ebeaa23
             lenPar[i] = ((3*(lm[i] - 1)**2)/(-0.4+lm[i]))
     return lenPar
 
@@ -538,11 +517,7 @@ def get_muscle_force_length_regression():
     forceP = TAPassive[:,1]
     
     centres = np.arange(min(lengthA), max(lengthA), 0.1)
-<<<<<<< HEAD
-    width = .15
-=======
     width = .155                                                                    #[-0.78820701] is force velocity at a=1, lm=1, lt=1.01
->>>>>>> ef170815a2a81031c5005a7867ebaa535ebeaa23
     result = Regression(lengthA, forceA, centres, width, .1, sigmoids=False)
     # result = Regression(lengthP, forceP, centres, width, .1, sigmoids=False)
 
@@ -577,9 +552,6 @@ lt = np.arange(0, 1.07, 1.07/100)
 
 a = np.arange(0, 1, 1/100)
 plot_curves()
-<<<<<<< HEAD
-get_velocity(a,lm,lt)
-=======
 # a = [1]
 # lm = [1]
 # lt = [1.01]
@@ -587,4 +559,3 @@ print (get_velocity(1,1,1.01))
 
 myMuscle = HillTypeMuscle(100, .3, .1)
 myMuscle.norm_muscle_length()
->>>>>>> ef170815a2a81031c5005a7867ebaa535ebeaa23
