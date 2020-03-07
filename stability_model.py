@@ -54,13 +54,18 @@ def dynamics(x, soleus, tibialis, control):
     """
 
     # WRITE CODE HERE TO IMPLEMENT THE MODEL
+    print("in dynamics")
     tS = soleus.f0M*soleus.get_force(soleus_length(x[0]), x[2])*0.05
     tTA = tibialis.f0M*tibialis.get_force(tibialis_length(x[0]), x[3])*0.03
+    # print ("first section")
     x_der = []
     x_der.append(x[1])
     x_der.append((tS - tTA + gravity_moment(x[0]))/90)
+    # print("second")
     x_der.append(get_velocity(0.05, x[2], soleus_length(x[0])))
+    # print("third")
     x_der.append(get_velocity(0.4, x[3], tibialis_length(x[0])))
+    print ("out dynamics")
     return x_der
 
 def simulate(control, T):
@@ -69,11 +74,14 @@ def simulate(control, T):
     :param control: True if balance should be controlled
     :param T: total time to simulate, in seconds
     """
+    print ("I will run the stuff in stability")
     rest_length_soleus = soleus_length(np.pi/2)
     rest_length_tibialis = tibialis_length(np.pi/2)
+    print("I can call")
 
     soleus = HillTypeMuscle(16000, .6*rest_length_soleus, .4*rest_length_soleus)
     tibialis = HillTypeMuscle(2000, .6*rest_length_tibialis, .4*rest_length_tibialis)
+    print("I can update")
 
     def f(t, x):
         return dynamics(x, soleus, tibialis, control)
@@ -83,6 +91,7 @@ def simulate(control, T):
     theta = sol.y[0,:]
     soleus_norm_length_muscle = sol.y[2,:]
     tibialis_norm_length_muscle = sol.y[3,:]
+    print("Solved ivp")
 
     soleus_moment_arm = .05
     tibialis_moment_arm = .03
@@ -105,6 +114,12 @@ def simulate(control, T):
     plt.ylabel('Torques (Nm)')
     plt.tight_layout()
     plt.show()
+<<<<<<< HEAD
 simulate(False, 1)
+=======
+
+simulate(False, 5)
+>>>>>>> 68a66e97528a69e022f160093dcc97e6b108c8ff
 # tib_ant = HillTypeMuscle(2000, 0.6*(tibialis_length((np.pi)/2)), 0.4*(tibialis_length((np.pi)/2)))
 # soleus = HillTypeMuscle(16000, 0.6*(soleus_length((np.pi)/2)), 0.4*(soleus_length((np.pi)/2)))
+print ("yes i am in here")
