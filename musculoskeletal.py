@@ -6,7 +6,6 @@ from sklearn.linear_model import Ridge
 from scipy.special import expit
 from scipy.integrate import solve_ivp
 
-
 class HillTypeMuscle:
     """
     Damped Hill-type muscle model adapted from Millard et al. (2013). The
@@ -29,7 +28,7 @@ class HillTypeMuscle:
 
     def norm_tendon_length(self, muscle_tendon_length, normalized_muscle_length):
         """
-        :param muscle_tendon_length: non-normalized length of the full muscle-tendon
+        :param muscle_tendon_length: non-normalized length of the full muscle-tendon (0.4)
             complex (typically found from joint angles and musculoskeletal geometry)
         :param normalized_muscle_length: normalized length of the contractile element
             (the state variable of the muscle model)
@@ -391,6 +390,35 @@ a = np.arange(0, 1, 1/100)
 # lm = [1]
 # lt = [1.01]
 print (get_velocity(1,1,1.01))
-
+# def ourMuscle(x):
+    #need to plot the contractile element length. We have a function for the tendon length. Overall length is set at 1 normalized, or 0.4 unnormalized
+    #need to plot the force produced by the muscle
+def finding_lm(t, x):
+    # time = np.arange(0, 2, 0.1)
+    # result = np.arange(0, 2, 0.1)*0
+    # velocity_store = []
+    if t < 0.5:
+        return get_velocity(0, x, 2-x)
+    else:
+        return get_velocity(1, x, 2-x)
+    #     velocity_store.append(get_velocity(a, x, 2-x))
+    #  velocity_store
+    # return result
+contractile_length = solve_ivp(finding_lm, [0,2], [1], max_step = 0.01)
 myMuscle = HillTypeMuscle(100, .3, .1)
-myMuscle.norm_tendon_length(.3,.1)
+
+
+plt.figure()
+plt.subplot(1,2,1)
+plt.plot(contractile_length.t, contractile_length.y.T)
+plt.xlabel('Time (s)')
+plt.ylabel('Normalized CE length')
+plt.subplot(1,2,2)
+plt.plot(contractile_length.t, myMuscle.get_force(0.4, contractile_length.y.T))
+plt.xlabel('Time (s)')
+plt.ylabel('Normalized Tension')
+plt.tight_layout()
+plt.show()
+
+
+
