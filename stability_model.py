@@ -54,7 +54,14 @@ def dynamics(x, soleus, tibialis, control):
     """
 
     # WRITE CODE HERE TO IMPLEMENT THE MODEL
-
+    tS = soleus.f0M*soleus.get_force(soleus_length(x[0]), x[2])*0.05
+    tTA = tibialis.f0M*tibialis.get_force(tibialis_length(x[0]), x[3])*0.03
+    x_der = []
+    x_der.append(x[1])
+    x_der.append((tS - tTA + gravity_moment(x[0]))/90)
+    x_der.append(get_velocity(0.05, x[2], soleus_length(x[0])))
+    x_der.append(get_velocity(0.4, x[3], tibialis_length(x[0])))
+    return x_der
 
 def simulate(control, T):
     """
@@ -71,7 +78,7 @@ def simulate(control, T):
     def f(t, x):
         return dynamics(x, soleus, tibialis, control)
 
-    sol = solve_ivp(f, [0, T], [np.pi/2, 0, 1, 1], rtol=1e-5, atol=1e-8)
+    sol = solve_ivp(f, [0, T], [np.pi/2-0.001, 0, 1, 1], rtol=1e-5, atol=1e-8)
     time = sol.t
     theta = sol.y[0,:]
     soleus_norm_length_muscle = sol.y[2,:]
@@ -98,5 +105,6 @@ def simulate(control, T):
     plt.ylabel('Torques (Nm)')
     plt.tight_layout()
     plt.show()
-
-
+simulate(True, 5)
+# tib_ant = HillTypeMuscle(2000, 0.6*(tibialis_length((np.pi)/2)), 0.4*(tibialis_length((np.pi)/2)))
+# soleus = HillTypeMuscle(16000, 0.6*(soleus_length((np.pi)/2)), 0.4*(soleus_length((np.pi)/2)))
