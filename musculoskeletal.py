@@ -25,6 +25,7 @@ class HillTypeMuscle:
         self.f0M = f0M
         self.resting_length_muscle = resting_length_muscle
         self.resting_length_tendon = resting_length_tendon
+        print ("making Hill-type stuff in musculo-file")
 
     def norm_tendon_length(self, muscle_tendon_length, normalized_muscle_length):
         """
@@ -72,7 +73,7 @@ def force_length_tendon(lt):
     :return: normalized tension produced by tendon
     """
     # WRITE CODE HERE
-    if isinstance(lt, float):
+    if isinstance(lt, float) or isinstance(lt, int):
         if lt < 1:
             return 0
         elif lt >= 1:
@@ -94,10 +95,10 @@ def force_length_parallel(lm):
     :return: normalized force produced by parallel elastic element
     """
     # WRITE CODE HERE
-    if isinstance(lm, int):
+    if isinstance(lm, float) or isinstance(lm, int):
         if lm < 1:
             return 0
-        elif lm >= 1:
+        else:
             return ((3*(lm - 1)**2)/(-0.4+lm))
     
     lenPar = lm*0
@@ -385,7 +386,7 @@ lm = np.arange(0, 1.8, 1.8/100)
 lt = np.arange(0, 1.07, 1.07/100)
 
 a = np.arange(0, 1, 1/100)
-# plot_curves()
+plot_curves()
 # a = [1]
 # lm = [1]
 # lt = [1.01]
@@ -421,4 +422,4 @@ plt.tight_layout()
 plt.show()
 
 
-
+print ("in musculo-file")
