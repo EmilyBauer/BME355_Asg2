@@ -114,12 +114,8 @@ def simulate(control, T):
     plt.ylabel('Torques (Nm)')
     plt.tight_layout()
     plt.show()
-<<<<<<< HEAD
-simulate(False, 1)
-=======
 
 simulate(False, 5)
->>>>>>> 68a66e97528a69e022f160093dcc97e6b108c8ff
 # tib_ant = HillTypeMuscle(2000, 0.6*(tibialis_length((np.pi)/2)), 0.4*(tibialis_length((np.pi)/2)))
 # soleus = HillTypeMuscle(16000, 0.6*(soleus_length((np.pi)/2)), 0.4*(soleus_length((np.pi)/2)))
 print ("yes i am in here")
