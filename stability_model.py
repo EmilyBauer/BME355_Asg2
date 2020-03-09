@@ -6,7 +6,7 @@ and two muscles that create moments about the ankles, tibialis anterior and sole
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import solve_ivp
-from musculoskeletal import HillTypeMuscle, get_velocity
+from musculoskeletal import HillTypeMuscle, get_velocity, force_length_tendon
 import math
 
 
@@ -70,11 +70,11 @@ def dynamics(x, soleus, tibialis, control):
         aS = 0.05
         aTA = 0.4
     
-    tS = soleus.f0M*soleus.get_force(soleus_length(x[0]), x[2])*0.05
-    tTA = tibialis.f0M*tibialis.get_force(tibialis_length(x[0]), x[3])*0.03
+    tS = (soleus.f0M)*force_length_tendon(soleus.norm_tendon_length(soleus_length(x[0]), x[2]))*0.05
+    tTA = (tibialis.f0M)*force_length_tendon(tibialis.norm_tendon_length(soleus_length(x[0]), x[3]))*0.03
     x_der = np.zeros(4)
     x_der[0] = x[1]
-    x_der[1] = (tS - tTA + gravity_moment(x[0]-np.pi/2))/90
+    x_der[1] = (tS - tTA + gravity_moment(x[0]))/90
     x_der[2] = get_velocity(aS, x[2], soleus.norm_tendon_length(soleus_length(x[0]), x[2]))
     x_der[3] = get_velocity(aTA, x[3], tibialis.norm_tendon_length(tibialis_length(x[0]), x[3]))
     return x_der
