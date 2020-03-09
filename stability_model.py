@@ -52,20 +52,28 @@ def dynamics(x, soleus, tibialis, control):
     :param control: True if balance should be controlled
     :return: derivative of state vector
     """
-
+    # tS = soleus.f0M*soleus.get_force(2, x[2])*0.05
+    # tTA = tibialis.f0M*tibialis.get_force(2, x[3])*0.03
+    # x_der = []
+    # x_der.append(x[1])
+    # x_der.append((tS - tTA + gravity_moment(x[0]))/90)
+    # x_der.append(get_velocity(0.05, x[2], (soleus_length(x[0]) - soleus.norm_tendon_length(0.4*soleus_length(x[0]),2))))
+    # x_der.append(get_velocity(0.4, x[3], (tibialis_length(x[0]) - tibialis.norm_tendon_length(0.4*tibialis_length(x[0]),2))))
+    # print ("    ", tS, "    ", tTA)
+    # return x_der
+    
     # WRITE CODE HERE TO IMPLEMENT THE MODEL
-    print("in dynamics")
+    # print("in dynamics")
     tS = soleus.f0M*soleus.get_force(soleus_length(x[0]), x[2])*0.05
     tTA = tibialis.f0M*tibialis.get_force(tibialis_length(x[0]), x[3])*0.03
-    # print ("first section")
     x_der = []
     x_der.append(x[1])
-    x_der.append((tS - tTA + gravity_moment(x[0]))/90)
-    # print("second")
-    x_der.append(get_velocity(0.05, x[2], soleus_length(x[0])))
-    # print("third")
-    x_der.append(get_velocity(0.4, x[3], tibialis_length(x[0])))
-    print ("out dynamics")
+    x_der.append((tS - tTA + gravity_moment(x[0]-np.pi/2))/90)
+    # x_der.append(get_velocity(0.05, x[2], (soleus_length(x[0]) - soleus.norm_tendon_length(0.4*soleus_length(x[0]),soleus_length(x[0])))))
+    x_der.append(get_velocity(0.05, x[2], soleus.norm_tendon_length(soleus_length(x[0]), x[2])))
+    # x_der.append(get_velocity(0.4, x[3], (tibialis_length(x[0]) - tibialis.norm_tendon_length(0.4*tibialis_length(x[0]),tibialis_length(x[0])))))
+    x_der.append(get_velocity(0.4, x[3], tibialis.norm_tendon_length(tibialis_length(x[0]), x[3])))
+    # print ("    ", tS, "    ", tTA)
     return x_der
 
 def simulate(control, T):
@@ -86,7 +94,7 @@ def simulate(control, T):
     def f(t, x):
         return dynamics(x, soleus, tibialis, control)
 
-    sol = solve_ivp(f, [0, T], [np.pi/2-0.001, 0, 1, 1], rtol=1e-5, atol=1e-8)
+    sol = solve_ivp(f, [0, T], [np.pi/2 - 0.001, 0, 1, 1], rtol=1e-5, atol=1e-8)
     time = sol.t
     theta = sol.y[0,:]
     soleus_norm_length_muscle = sol.y[2,:]
