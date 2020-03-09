@@ -7,6 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import solve_ivp
 from musculoskeletal import HillTypeMuscle, get_velocity
+import math
 
 
 def soleus_length(theta):
@@ -52,28 +53,30 @@ def dynamics(x, soleus, tibialis, control):
     :param control: True if balance should be controlled
     :return: derivative of state vector
     """
-    # tS = soleus.f0M*soleus.get_force(2, x[2])*0.05
-    # tTA = tibialis.f0M*tibialis.get_force(2, x[3])*0.03
-    # x_der = []
-    # x_der.append(x[1])
-    # x_der.append((tS - tTA + gravity_moment(x[0]))/90)
-    # x_der.append(get_velocity(0.05, x[2], (soleus_length(x[0]) - soleus.norm_tendon_length(0.4*soleus_length(x[0]),2))))
-    # x_der.append(get_velocity(0.4, x[3], (tibialis_length(x[0]) - tibialis.norm_tendon_length(0.4*tibialis_length(x[0]),2))))
-    # print ("    ", tS, "    ", tTA)
-    # return x_der
     
     # WRITE CODE HERE TO IMPLEMENT THE MODEL
-    # print("in dynamics")
+    if control:
+        aS = (np.pi/2-x[0])*0.15**2
+        aTA = (x[0]-np.pi/2)*0.4**2
+        if aS > 0.05:
+            aS = 0.05
+        if aS < 0:
+            aS = 0
+        if aTA > 0.4:
+            aTA = 0.4
+        if aTA < 0:
+            aTA = 0
+    else:
+        aS = 0.05
+        aTA = 0.4
+    
     tS = soleus.f0M*soleus.get_force(soleus_length(x[0]), x[2])*0.05
     tTA = tibialis.f0M*tibialis.get_force(tibialis_length(x[0]), x[3])*0.03
-    x_der = []
-    x_der.append(x[1])
-    x_der.append((tS - tTA + gravity_moment(x[0]-np.pi/2))/90)
-    # x_der.append(get_velocity(0.05, x[2], (soleus_length(x[0]) - soleus.norm_tendon_length(0.4*soleus_length(x[0]),soleus_length(x[0])))))
-    x_der.append(get_velocity(0.05, x[2], soleus.norm_tendon_length(soleus_length(x[0]), x[2])))
-    # x_der.append(get_velocity(0.4, x[3], (tibialis_length(x[0]) - tibialis.norm_tendon_length(0.4*tibialis_length(x[0]),tibialis_length(x[0])))))
-    x_der.append(get_velocity(0.4, x[3], tibialis.norm_tendon_length(tibialis_length(x[0]), x[3])))
-    # print ("    ", tS, "    ", tTA)
+    x_der = np.zeros(4)
+    x_der[0] = x[1]
+    x_der[1] = (tS - tTA + gravity_moment(x[0]-np.pi/2))/90
+    x_der[2] = get_velocity(aS, x[2], soleus.norm_tendon_length(soleus_length(x[0]), x[2]))
+    x_der[3] = get_velocity(aTA, x[3], tibialis.norm_tendon_length(tibialis_length(x[0]), x[3]))
     return x_der
 
 def simulate(control, T):
@@ -119,7 +122,4 @@ def simulate(control, T):
     plt.tight_layout()
     plt.show()
 
-simulate(False, 5)
-# tib_ant = HillTypeMuscle(2000, 0.6*(tibialis_length((np.pi)/2)), 0.4*(tibialis_length((np.pi)/2)))
-# soleus = HillTypeMuscle(16000, 0.6*(soleus_length((np.pi)/2)), 0.4*(soleus_length((np.pi)/2)))
-print ("yes i am in here")
+simulate(True, 30)

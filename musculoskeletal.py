@@ -56,11 +56,8 @@ def get_velocity(a, lm, lt):
     beta = 0.1 # damping coefficient (see damped model in Millard et al.)
     def f(vm):
         p1 = a*force_length_muscle(lm)*force_velocity_muscle(vm)
-        # print(p1)
         p2 = force_length_parallel(lm) + beta*vm
-        # print(p2)
         p3 = force_length_tendon(lt)
-        # print (p3)
         return ((p1 + p2) - p3)
     return fsolve(f, 0)
 
@@ -356,7 +353,7 @@ def get_muscle_force_length_regression():
     forceA = TAActive[:,1]
     
     centres = np.arange(min(lengthA), max(lengthA), 0.1)
-    width = .155                                 #[-0.51107437] is force velocity at a=1, lm=1, lt=1.01, width = 0.155
+    width = .155
     result = Regression(lengthA, forceA, centres, width, .1, sigmoids=False)
 
     return result
@@ -382,33 +379,20 @@ def force_velocity_muscle(vm):
     """
     return np.maximum(0, force_velocity_regression.eval(vm))
 lm = np.arange(0, 1.8, 1.8/100)
-# vm = np.arange(-1.2, 1.2, 1/240)
 lt = np.arange(0, 1.07, 1.07/100)
 
 a = np.arange(0, 1, 1/100)
 plot_curves()
-# a = [1]
-# lm = [1]
-# lt = [1.01]
 print (get_velocity(1,1,1.01))
-# def ourMuscle(x):
-    #need to plot the contractile element length. We have a function for the tendon length. Overall length is set at 1 normalized, or 0.4 unnormalized
-    #need to plot the force produced by the muscle
 myMuscle = HillTypeMuscle(100, .3, .1)
+
 def finding_lm(t, x):
-    # time = np.arange(0, 2, 0.1)
-    # result = np.arange(0, 2, 0.1)*0
-    # velocity_store = []
     if t < 0.5:
         return get_velocity(0, x, myMuscle.norm_tendon_length(0.4, x))
     else:
         return get_velocity(1, x, myMuscle.norm_tendon_length(0.4, x))
-    #     velocity_store.append(get_velocity(a, x, 2-x))
-    #  velocity_store
-    # return result
 
 contractile_length = solve_ivp(finding_lm, [0,2], [1], max_step = 0.01)
-# myMuscle = HillTypeMuscle(100, .3, .1)
 
 
 plt.figure()
