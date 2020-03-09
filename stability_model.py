@@ -56,7 +56,7 @@ def dynamics(x, soleus, tibialis, control):
     
     # WRITE CODE HERE TO IMPLEMENT THE MODEL
     if control:
-        aS = (np.pi/2-x[0])*0.15**2
+        aS = (np.pi/2-x[0])*0.05**2
         aTA = (x[0]-np.pi/2)*0.4**2
         if aS > 0.05:
             aS = 0.05
@@ -122,4 +122,4 @@ def simulate(control, T):
     plt.tight_layout()
     plt.show()
 
-simulate(True, 30)
+simulate(True, 10)

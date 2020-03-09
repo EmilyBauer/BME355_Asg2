@@ -398,14 +398,13 @@ contractile_length = solve_ivp(finding_lm, [0,2], [1], max_step = 0.01)
 plt.figure()
 plt.subplot(1,2,1)
 plt.plot(contractile_length.t, contractile_length.y.T)
+
 plt.xlabel('Time (s)')
-plt.ylabel('Normalized CE length')
+plt.ylabel('Contractile Element Length')
 plt.subplot(1,2,2)
 plt.plot(contractile_length.t, myMuscle.get_force(0.4, contractile_length.y.T))
+
 plt.xlabel('Time (s)')
-plt.ylabel('Normalized Tension')
+plt.ylabel('Force produced by Muscle')
 plt.tight_layout()
 plt.show()
-
-
-print ("in musculo-file")
