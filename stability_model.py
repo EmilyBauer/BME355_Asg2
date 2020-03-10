@@ -56,18 +56,33 @@ def dynamics(x, soleus, tibialis, control):
     
     # WRITE CODE HERE TO IMPLEMENT THE MODEL
     if control:
-        # activSMax = 0.15
-        # activeTAMax = 0.4
-        aS = x[1]
-        aTA = x[1]
-        # if aS > activSMax:
-        #     aS = activSMax
-        # if aS < 0:
-        #     aS = 0
-        # if aTA > activeTAMax:
-        #     aTA = activeTAMax
-        # if aTA < 0:
-        #     aTA = 0
+        activSMax = 1
+        activeTAMax = 1
+        if x[0] < np.pi/2 and x[1] < 0: 
+            aS = activSMax
+            aTA = 0
+        elif x[0] > np.pi/2 and x[1] > 0:
+            aS = 0
+            aTA = activeTAMax
+        elif x[0] < np.pi/2 and x[1] > 0:
+            aS = (np.pi/2-x[0])
+            aTA = (np.pi/2-x[0])
+        elif x[0] > np.pi/2 and x[1] < 0:
+            aS = -(np.pi/2-x[0])
+            aTA = -(np.pi/2-x[0])
+        else:
+            aS = 0
+            aTA = 0
+
+        if aS > activSMax:
+            aS = activSMax
+        if aS < 0:
+            aS = 0
+        if aTA > activeTAMax:
+            aTA = activeTAMax
+        if aTA < 0:
+            aTA = 0
+        print(x[0], "      ", x[1])
     else:
         aS = 0.05
         aTA = 0.4
@@ -124,4 +139,4 @@ def simulate(control, T):
     plt.tight_layout()
     plt.show()
 
-simulate(False, 10)
+simulate(True, 10)
