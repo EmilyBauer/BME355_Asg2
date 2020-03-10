@@ -56,18 +56,18 @@ def dynamics(x, soleus, tibialis, control):
     
     # WRITE CODE HERE TO IMPLEMENT THE MODEL
     if control:
-        activSMax=1
-        activeTAMax = 1
-        aS = -x[1]**2*activSMax + (np.pi/2-x[0])*activSMax**2
-        aTA = x[1]**2*activeTAMax + (x[0]-np.pi/2)*activeTAMax**2
-        if aS > activSMax:
-            aS = activSMax
-        if aS < 0:
-            aS = 0
-        if aTA > activeTAMax:
-            aTA = activeTAMax
-        if aTA < 0:
-            aTA = 0
+        # activSMax = 0.15
+        # activeTAMax = 0.4
+        aS = x[1]
+        aTA = x[1]
+        # if aS > activSMax:
+        #     aS = activSMax
+        # if aS < 0:
+        #     aS = 0
+        # if aTA > activeTAMax:
+        #     aTA = activeTAMax
+        # if aTA < 0:
+        #     aTA = 0
     else:
         aS = 0.05
         aTA = 0.4
@@ -96,7 +96,7 @@ def simulate(control, T):
     def f(t, x):
         return dynamics(x, soleus, tibialis, control)
 
-    sol = solve_ivp(f, [0, T], [np.pi/2 - 0.001, 0, 1, 1], rtol=1e-5, atol=1e-8)
+    sol = solve_ivp(f, [0, T], [np.pi/2 -0.001, 0, 1, 1], rtol=1e-5, atol=1e-8)
     time = sol.t
     theta = sol.y[0,:]
     soleus_norm_length_muscle = sol.y[2,:]
@@ -124,4 +124,4 @@ def simulate(control, T):
     plt.tight_layout()
     plt.show()
 
-simulate(True, 30)
+simulate(False, 10)
